@@ -9,7 +9,6 @@ const App = () => {
     Modal.info({
       title: 'Info',
       content: 'This is a message',
-      onOk() {},
     });
   };
 
