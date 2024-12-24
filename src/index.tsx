@@ -10,9 +10,12 @@ unstableSetRender((node, container: ContainerType) => {
   container._reactRoot ||= createRoot(container);
   const root: ReturnType<typeof createRoot> = container._reactRoot;
   root.render(node);
-  return async () => {
-    // Wait for timeout to avoid React render race.
-    await new Promise((resolve) => setTimeout(resolve, 0));
-    root.unmount();
-  };
+
+  return () =>
+    new Promise<void>((resolve) => {
+      setTimeout(() => {
+        root.unmount();
+        resolve();
+      }, 0);
+    });
 });
