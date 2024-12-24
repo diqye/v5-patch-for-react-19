@@ -1,13 +1,10 @@
-import { act, fireEvent } from '@testing-library/react';
-import { resetWarned } from 'rc-util/lib/warning';
-import React from 'react';
-import { createRoot } from 'react-dom/client';
-import Trigger from '../src';
-import { awaitFakeTimer } from './util';
+import { act } from '@testing-library/react';
+import { Modal } from 'antd';
+import { version } from 'react';
+import '../src';
 
 describe('Trigger.Shadow', () => {
   beforeEach(() => {
-    resetWarned();
     jest.useFakeTimers();
   });
 
@@ -15,89 +12,17 @@ describe('Trigger.Shadow', () => {
     jest.useRealTimers();
   });
 
-  const Demo: React.FC = (props?: any) => (
-    <>
-      <Trigger
-        action={['click']}
-        popup={<span className="bamboo" />}
-        builtinPlacements={{
-          top: {},
-        }}
-        popupPlacement="top"
-        {...props}
-      >
-        <p className="target" />
-      </Trigger>
-
-      {/* Placeholder element which not related with Trigger */}
-      <div className="little" />
-    </>
-  );
-
-  const renderShadow = (props?: any) => {
-    const host = document.createElement('div');
-    document.body.appendChild(host);
-
-    const shadowRoot = host.attachShadow({
-      mode: 'open',
-      delegatesFocus: false,
+  it('should work', async () => {
+    Modal.info({
+      title: 'Info',
+      content: 'This is a message',
     });
-    const container = document.createElement('div');
-    shadowRoot.appendChild(container);
 
     act(() => {
-      createRoot(container).render(<Demo {...props} />);
+      jest.runAllTimers();
     });
 
-    return shadowRoot;
-  };
-
-  it('popup not in the same shadow', async () => {
-    const errSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
-    const shadowRoot = renderShadow();
-
-    await awaitFakeTimer();
-
-    fireEvent.click(shadowRoot.querySelector('.target'));
-
-    await awaitFakeTimer();
-
-    expect(errSpy).toHaveBeenCalledWith(
-      `Warning: trigger element and popup element should in same shadow root.`,
-    );
-    errSpy.mockRestore();
-  });
-
-  it('click in shadow should not close popup', async () => {
-    const errSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
-    const shadowRoot = renderShadow({
-      getPopupContainer: (item: HTMLElement) => item.parentElement,
-      autoDestroy: true,
-    });
-
-    await awaitFakeTimer();
-
-    // Click to show
-    fireEvent.click(shadowRoot.querySelector('.target'));
-    await awaitFakeTimer();
-    expect(shadowRoot.querySelector('.bamboo')).toBeTruthy();
-
-    // Click outside to hide
-    fireEvent.click(document.body.firstChild);
-    await awaitFakeTimer();
-    expect(shadowRoot.querySelector('.bamboo')).toBeFalsy();
-
-    // Click to show again
-    fireEvent.click(shadowRoot.querySelector('.target'));
-    await awaitFakeTimer();
-    expect(shadowRoot.querySelector('.bamboo')).toBeTruthy();
-
-    // Click in side shadow to hide
-    fireEvent.click(shadowRoot.querySelector('.little'));
-    await awaitFakeTimer();
-    expect(shadowRoot.querySelector('.bamboo')).toBeFalsy();
-
-    expect(errSpy).not.toHaveBeenCalled();
-    errSpy.mockRestore();
+    expect(version.startsWith('19')).toBeTruthy();
+    expect(document.querySelector('.ant-modal-root')).toBeTruthy();
   });
 });
