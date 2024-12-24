@@ -1,6 +1,6 @@
 {
   "name": "@ant-design/v5-patch-for-react-19",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "Patch for antd v5 to support React 19",
   "keywords": [
     "antd",
