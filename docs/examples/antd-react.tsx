@@ -1,5 +1,3 @@
-/* eslint no-console:0 */
-
 import '@ant-design/v5-patch-for-react-19';
 import { Button, Flex, Modal, version } from 'antd';
 import * as React from 'react';
