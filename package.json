@@ -26,8 +26,8 @@
     "build": "dumi build",
     "compile": "father build",
     "coverage": "rc-test --coverage",
-    "lint": "biome lint",
-    "prepublishOnly": "npm run compile && np --yolo --no-publish",
+    "lint": "eslint src/ docs/examples/ --ext .tsx,.ts,.jsx,.js",
+    "prepublishOnly": "npm run compile",
     "start": "dumi dev",
     "test": "rc-test"
   },
@@ -35,7 +35,6 @@
     "@babel/runtime": "^7.18.3"
   },
   "devDependencies": {
-    "@biomejs/biome": "^1.9.4",
     "@rc-component/father-plugin": "^1.0.0",
     "@testing-library/jest-dom": "^5.16.4",
     "@testing-library/react": "^16.1.0",
@@ -46,6 +45,7 @@
     "antd": "^5.22.6",
     "cross-env": "^7.0.1",
     "dumi": "^2.1.0",
+    "eslint": "^8.51.0",
     "father": "^4.0.0",
     "np": "^6.2.0",
     "rc-test": "^7.0.13",
